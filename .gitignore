@@ -16,3 +16,10 @@ app/config/parameters.yml
 
 # Composer
 composer.phar
+
+# IDEs
+.idea/*
+*.sw*
+
+# DevOps
+.vagrant/*
