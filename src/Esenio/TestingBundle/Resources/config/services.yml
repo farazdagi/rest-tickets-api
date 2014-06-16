@@ -1,0 +1,7 @@
+parameters:
+#    esenio_testing.example.class: Esenio\TestingBundle\Example
+
+services:
+#    esenio_testing.example:
+#        class: %esenio_testing.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
