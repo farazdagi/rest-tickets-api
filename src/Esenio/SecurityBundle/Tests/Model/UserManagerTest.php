@@ -100,7 +100,7 @@ class UserManagerTest extends TestCase
         $users = $this->service->findUsers();
         $this->assertCount(10, $users);
 
-        $userInd = rand(0, 10);
+        $userInd = rand(0, 9);
         $username = $users[$userInd]->getUsername();
 
         $user = $this->service->findUserByUsername($username);

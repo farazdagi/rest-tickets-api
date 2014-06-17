@@ -101,7 +101,7 @@ class UserManager implements UserManagerInterface
     public function populateUser(UserInterface $user)
     {
         $this->encodePassword($user);
-        if ($user->getEmail() && !$user->getUsername()) { // email, is used as username by default
+        if ($user->getEmail() && !$user->getUsername()) { // if username is not set, try to set it to email
             $user->setUsername($user->getEmail());
         }
         return $this;
