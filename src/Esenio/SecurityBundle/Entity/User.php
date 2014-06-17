@@ -32,7 +32,7 @@ class User implements UserInterface
     protected $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", unique=true)
      */
     protected  $username;
 
