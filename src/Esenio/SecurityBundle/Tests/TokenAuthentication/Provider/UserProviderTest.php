@@ -57,7 +57,7 @@ class UserProviderTest extends TestCase
         $user = $users[0];
 
         /** @var TokenEncoder $encoder */
-        $decoder = $encoder = new TokenEncoder(
+        $encoder = new TokenEncoder(
             $this->container->getParameter('esenio_security.secret'),
             $this->container->getParameter('esenio_security.jwt.algo'));
 
@@ -67,7 +67,7 @@ class UserProviderTest extends TestCase
         );
 
         /** @var TokenInterface $token */
-        $token = new Token($decoder, $user, $encoder->encodeToken($payload));
+        $token = new Token($user, $encoder->encodeToken($payload));
 
         $username = $this->service->getUsernameForToken($token);
         $this->assertEquals($username, $user->getUsername());
@@ -78,7 +78,7 @@ class UserProviderTest extends TestCase
         $this->setExpectedException('Symfony\Component\Security\Core\Exception\UsernameNotFoundException');
 
         /** @var TokenEncoder $encoder */
-        $decoder = $encoder = new TokenEncoder(
+        $encoder = new TokenEncoder(
             $this->container->getParameter('esenio_security.secret'),
             $this->container->getParameter('esenio_security.jwt.algo'));
 
@@ -88,7 +88,7 @@ class UserProviderTest extends TestCase
         );
 
         /** @var TokenInterface $token */
-        $token = new Token($decoder, Token::USER_ANONYMOUS, $encoder->encodeToken($payload));
+        $token = new Token(Token::USER_ANONYMOUS, $encoder->encodeToken($payload));
 
         $this->service->getUsernameForToken($token);
     }

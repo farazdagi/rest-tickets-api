@@ -53,43 +53,6 @@ class TokenTest extends TestCase
         $this->assertEquals($user->getUsername(), $token->getUsername());
     }
 
-    public function testConstructionWithUserObjectAndInvalidPayload()
-    {
-        $this->loadFixtures();
-
-        $this->setExpectedException('InvalidArgumentException', 'Cannot extract username from token.');
-
-        /** @var UserManagerInterface $userManager */
-        $userManager = $this->container->get('esenio_security.user_manager');
-        $users = $userManager->findUsers();
-        /** @var UserInterface $user */
-        $user = $users[0];
-
-        $this->factory->createToken($user, 'somejunk');
-    }
-
-    public function testConstructionWithUserObjectWithTokenForged()
-    {
-        $this->loadFixtures();
-
-        $this->setExpectedException('InvalidArgumentException', 'Invalid token supplied..');
-
-        /** @var UserManagerInterface $userManager */
-        $userManager = $this->container->get('esenio_security.user_manager');
-        $users = $userManager->findUsers();
-        /** @var UserInterface $user */
-        $user = $users[0];
-
-        $payload = array(
-            'username' => $user->getUsername(),
-            'exp' => time() + 3600
-        );
-
-        $user->setUsername('root'); // we try to pass user having different user name then the one contained in token
-
-        $this->factory->createToken($user, $this->encoder->encodeToken($payload));
-    }
-
     public function testConstructionWithAnonUser()
     {
         $token = $this->factory->createToken();

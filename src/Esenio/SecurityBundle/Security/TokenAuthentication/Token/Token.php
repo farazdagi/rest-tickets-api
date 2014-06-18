@@ -15,18 +15,12 @@ class Token extends AbstractToken implements TokenInterface
     private $credentials;
 
     /**
-     * @var TokenDecoderInterface Decoder, able to decode token into original payload.
-     */
-    private $decoder;
-
-    /**
      * Constructor.
      */
-    public function __construct(TokenDecoderInterface $decoder, $user, $credentials, array $roles = array())
+    public function __construct($user, $credentials, array $roles = array())
     {
         parent::__construct($roles);
 
-        $this->decoder = $decoder;
         $this->credentials = $credentials;
 
         $this->setUser($user);
@@ -58,17 +52,6 @@ class Token extends AbstractToken implements TokenInterface
             return;
         }
 
-        // make sure that "username" in token is equals to that of supplied user
-        $payload = $this->decoder->decodeToken($this->credentials);
-
-        if (!isset($payload['username'])) {
-            throw new \InvalidArgumentException('Cannot extract username from token.');
-        }
-
-        if ($payload['username'] !== $user->getUsername()) {
-            throw new \InvalidArgumentException('Invalid token supplied..');
-        }
-
         parent::setUser($user);
     }
 
@@ -97,7 +80,7 @@ class Token extends AbstractToken implements TokenInterface
      */
     public function serialize()
     {
-        return serialize(array($this->credentials, $this->decoder, parent::serialize()));
+        return serialize(array($this->credentials, parent::serialize()));
     }
 
     /**
@@ -105,7 +88,7 @@ class Token extends AbstractToken implements TokenInterface
      */
     public function unserialize($str)
     {
-        list($this->credentials, $this->decoder, $parentStr) = unserialize($str);
+        list($this->credentials, $parentStr) = unserialize($str);
         parent::unserialize($parentStr);
     }
 }

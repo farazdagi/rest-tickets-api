@@ -5,32 +5,12 @@ namespace Esenio\SecurityBundle\Security\TokenAuthentication\Token;
 use Esenio\SecurityBundle\Model\UserInterface;
 
 /**
- * Creates TokenInterface objects. Encapsulates encoder/decoder setting.
+ * Creates TokenInterface objects.
  *
  * @package Esenio\SecurityBundle\Security\TokenAuthentication\Token
  */
 class TokenFactory implements TokenFactoryInterface
 {
-    /**
-     * @var TokenEncoderInterface
-     */
-    protected $encoder;
-
-    /**
-     * @var TokenDecoderInterface
-     */
-    protected $decoder;
-
-    /**
-     * @param TokenEncoderInterface $encoder Encoder to encode a token.
-     * @param TokenDecoderInterface $decoder Decodet to decode a token.
-     */
-    public function __construct(TokenEncoderInterface $encoder, TokenDecoderInterface $decoder)
-    {
-        $this->encoder = $encoder;
-        $this->decoder = $decoder;
-    }
-
     /**
      * Creates TokenInterface object. If UserInterface parameter is not supplied, anonymous token is created.
      *
@@ -46,7 +26,7 @@ class TokenFactory implements TokenFactoryInterface
             $user = TokenInterface::USER_ANONYMOUS;
         }
 
-        $token = new Token($this->decoder, $user, $credentials, $roles);
+        $token = new Token($user, $credentials, $roles);
 
         return $token;
     }

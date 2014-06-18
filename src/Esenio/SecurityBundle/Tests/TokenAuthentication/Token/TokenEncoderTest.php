@@ -127,7 +127,7 @@ class TokenEncoderTest extends TestCase
         );
 
         /** @var TokenInterface $token */
-        $token = new Token($this->decoder, Token::USER_ANONYMOUS, $this->encoder->encodeToken($payload));
+        $token = new Token(Token::USER_ANONYMOUS, $this->encoder->encodeToken($payload));
 
         $this->assertTrue($this->encoder->supportsToken($token));
         $this->assertFalse($this->encoder->supportsToken(new MockToken()));
