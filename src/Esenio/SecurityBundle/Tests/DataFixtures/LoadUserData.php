@@ -12,13 +12,8 @@ use Esenio\TestingBundle\UnitTesting\TestFixture;
 use Esenio\SecurityBundle\Entity\User;
 use Esenio\SecurityBundle\Model\UserManagerInterface;
 
-class LoadUserData implements FixtureInterface, ContainerAwareInterface
+class LoadUserData extends TestFixture
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
     /**
      * Load data fixtures with the passed EntityManager
      *
@@ -26,6 +21,8 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
      */
     public function load(ObjectManager $manager)
     {
+        parent::load($manager);
+
         $faker = Faker\Factory::create();
 
         /** @var UserManagerInterface $userManager */
@@ -43,17 +40,5 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
             $manager->persist($user);
         }
         $manager->flush();
-    }
-
-    /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 }
