@@ -48,6 +48,18 @@ class TokenEncoderTest extends TestCase
         $this->assertTrue($this->decoder instanceof TokenDecoderInterface);
     }
 
+    public function testInitWithoutPrivateKey()
+    {
+        $this->setExpectedException('InvalidArgumentException', 'Please provide private key for encoding.');
+        new TokenEncoder('');
+    }
+
+    public function testInitWithoutPrivateAlgo()
+    {
+        $this->setExpectedException('InvalidArgumentException', 'Please provide encoding algorithm.');
+        new TokenEncoder('secret', '');
+    }
+
     public function testEncodeToken()
     {
         $faker = Faker\Factory::create();

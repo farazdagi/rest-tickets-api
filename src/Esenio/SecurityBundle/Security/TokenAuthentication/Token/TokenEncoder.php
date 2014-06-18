@@ -24,11 +24,20 @@ class TokenEncoder implements TokenEncoderInterface, TokenDecoderInterface
     private $algorithm;
 
     /**
-     * @param string $secretKey Private key
-     * @param string $algorithm The signing algorithm. Supported algorithms are 'HS256', 'HS384' and 'HS512'.
+     * @param string $secretKey Private key used for encoding/decoding
+     * @param string $algorithm Encoding algorithm. Algorithms are 'HS256', 'HS384' and 'HS512'.
+     * @throws \InvalidArgumentException
      */
     public function __construct($secretKey, $algorithm = 'HS256')
     {
+        if (empty($secretKey)) {
+            throw new \InvalidArgumentException('Please provide private key for encoding.');
+        }
+
+        if (empty($algorithm)) {
+            throw new \InvalidArgumentException('Please provide encoding algorithm.');
+        }
+
         $this->secretKey = $secretKey;
         $this->algorithm = $algorithm;
     }
