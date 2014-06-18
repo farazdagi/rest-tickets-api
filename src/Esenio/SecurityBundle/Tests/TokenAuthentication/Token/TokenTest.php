@@ -5,11 +5,9 @@ namespace Esenio\SecurityBundle\Tests\TokenAuthentication\Token;
 use Esenio\TestingBundle\UnitTesting\TestCase;
 use Esenio\SecurityBundle\Model\UserManagerInterface;
 use Esenio\SecurityBundle\Model\UserInterface;
+use Esenio\SecurityBundle\Security\TokenAuthentication\Token\TokenFactoryInterface;
 use Esenio\SecurityBundle\Security\TokenAuthentication\Token\TokenEncoderInterface;
-use Esenio\SecurityBundle\Security\TokenAuthentication\Token\TokenDecoderInterface;
-use Esenio\SecurityBundle\Security\TokenAuthentication\Token\TokenEncoder;
 use Esenio\SecurityBundle\Security\TokenAuthentication\Token\TokenInterface;
-use Esenio\SecurityBundle\Security\TokenAuthentication\Token\Token;
 
 
 class TokenTest extends TestCase
@@ -20,21 +18,17 @@ class TokenTest extends TestCase
     protected $encoder;
 
     /**
-     * @var TokenDecoderInterface
+     * @var TokenFactoryInterface
      */
-    protected $decoder;
+    protected $factory;
 
     protected function setUp()
     {
         parent::setUp();
         $this->boot();
 
-        /** @var TokenEncoder $encoder */
-        /** @var TokenDecoderInterface $decoder */
-        $this->decoder = $this->encoder = new TokenEncoder(
-            $this->container->getParameter('esenio_security.secret'),
-            $this->container->getParameter('esenio_security.jwt.algo'));
-
+        $this->encoder = $this->container->get('esenio_security.token_authentication.token_encoder');
+        $this->factory = $this->container->get('esenio_security.token_factory');
     }
 
     public function testConstructionWithUserObject()
@@ -52,8 +46,7 @@ class TokenTest extends TestCase
             'exp' => time() + 3600
         );
 
-        /** @var TokenInterface $token */
-        $token = new Token($this->decoder, $user, $this->encoder->encodeToken($payload));
+        $token = $this->factory->createToken($user, $this->encoder->encodeToken($payload));
 
         $this->assertTrue($token instanceof TokenInterface);
         $this->assertTrue($token->getUser() instanceof UserInterface);
@@ -72,8 +65,7 @@ class TokenTest extends TestCase
         /** @var UserInterface $user */
         $user = $users[0];
 
-        /** @var TokenInterface $token */
-        $token = new Token($this->decoder, $user, 'somejunk');
+        $this->factory->createToken($user, 'somejunk');
     }
 
     public function testConstructionWithUserObjectWithTokenForged()
@@ -95,19 +87,12 @@ class TokenTest extends TestCase
 
         $user->setUsername('root'); // we try to pass user having different user name then the one contained in token
 
-        /** @var TokenInterface $token */
-        $token = new Token($this->decoder, $user, $this->encoder->encodeToken($payload));
+        $this->factory->createToken($user, $this->encoder->encodeToken($payload));
     }
 
     public function testConstructionWithAnonUser()
     {
-        $payload = array(
-            'username' => TokenInterface::USER_ANONYMOUS,
-            'exp' => time() + 3600
-        );
-
-        /** @var TokenInterface $token */
-        $token = new Token($this->decoder, TokenInterface::USER_ANONYMOUS, $this->encoder->encodeToken($payload));
+        $token = $this->factory->createToken();
 
         $this->assertTrue($token instanceof TokenInterface);
         $this->assertNull($token->getUser() );
@@ -123,8 +108,7 @@ class TokenTest extends TestCase
 
         $roles = array(UserInterface::ROLE_USER, UserInterface::ROLE_ADMIN);
 
-        /** @var TokenInterface $token */
-        $token = new Token($this->decoder, TokenInterface::USER_ANONYMOUS, $this->encoder->encodeToken($payload), $roles);
+        $token = $this->factory->createToken(null, $this->encoder->encodeToken($payload), $roles);
 
         $this->assertTrue($token instanceof TokenInterface);
         $this->assertNull($token->getUser() );
@@ -155,8 +139,7 @@ class TokenTest extends TestCase
             'exp' => time() + 3600
         );
 
-        /** @var TokenInterface $token */
-        $token = new Token($this->decoder, $user, $this->encoder->encodeToken($payload));
+        $token = $this->factory->createToken($user, $this->encoder->encodeToken($payload));
 
         $this->assertTrue($token instanceof TokenInterface);
         $this->assertTrue($token->getUser() instanceof UserInterface);
@@ -179,8 +162,7 @@ class TokenTest extends TestCase
             'exp' => time() + 3600
         );
 
-        /** @var TokenInterface $token */
-        $token = new Token($this->decoder, $user, $this->encoder->encodeToken($payload));
+        $token = $this->factory->createToken($user, $this->encoder->encodeToken($payload));
 
         $this->assertEquals($this->encoder->encodeToken($payload), $token->getCredentials());
         $token->eraseCredentials();
@@ -202,8 +184,7 @@ class TokenTest extends TestCase
             'exp' => time() + 3600
         );
 
-        /** @var TokenInterface $token */
-        $token = new Token($this->decoder, $user, $this->encoder->encodeToken($payload));
+        $token = $this->factory->createToken($user, $this->encoder->encodeToken($payload));
 
         $this->assertEquals($token, unserialize(serialize($token)));
     }
