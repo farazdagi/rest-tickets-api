@@ -314,7 +314,7 @@ class TokenIssuerTest extends TestCase
 
     public function testIssueTokenWithoutUsername()
     {
-        $this->setExpectedException(self::EXCEPTION_BAD_CREDENDIALS, 'You must specify username.');
+        $this->setExpectedException(self::EXCEPTION_BAD_CREDENDIALS, 'You must specify credentials.');
 
         // setup request
         $request = new Request();
@@ -331,7 +331,7 @@ class TokenIssuerTest extends TestCase
         $faker = Faker\Factory::create();
         $username = $faker->uuid;
 
-        $this->setExpectedException(self::EXCEPTION_BAD_CREDENDIALS, 'You must specify password.');
+        $this->setExpectedException(self::EXCEPTION_BAD_CREDENDIALS, 'You must specify credentials.');
 
         // setup request
         $request = new Request();

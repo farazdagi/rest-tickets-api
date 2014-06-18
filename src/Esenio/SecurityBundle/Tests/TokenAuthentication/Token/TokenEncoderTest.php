@@ -14,7 +14,7 @@ use Esenio\SecurityBundle\Security\TokenAuthentication\Token\TokenInterface;
 use Esenio\SecurityBundle\Security\TokenAuthentication\Token\Token;
 
 
-class MockToken extends AbstractToken implements BaseTokenInterface
+class TokenEncoderMockToken extends AbstractToken implements BaseTokenInterface
 {
     public function getCredentials() {}
 }
@@ -130,7 +130,7 @@ class TokenEncoderTest extends TestCase
         $token = new Token(Token::USER_ANONYMOUS, $this->encoder->encodeToken($payload));
 
         $this->assertTrue($this->encoder->supportsToken($token));
-        $this->assertFalse($this->encoder->supportsToken(new MockToken()));
+        $this->assertFalse($this->encoder->supportsToken(new TokenEncoderMockToken()));
     }
 }
  

@@ -87,11 +87,11 @@ class TokenIssuer implements TokenIssuerInterface
         }
 
         if (!$username = $request->request->has('username')) {
-            throw new BadCredentialsException('You must specify username.');
+            throw new BadCredentialsException('You must specify credentials.');
         }
 
         if (!$password = $request->request->has('password')) {
-            throw new BadCredentialsException('You must specify password.');
+            throw new BadCredentialsException('You must specify credentials.');
         }
 
         return $this->issueTokenUsingUsernameAndPassword(
