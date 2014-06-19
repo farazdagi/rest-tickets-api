@@ -23,3 +23,6 @@ composer.phar
 
 # DevOps
 .vagrant/*
+
+# Temp Files
+*.php~
