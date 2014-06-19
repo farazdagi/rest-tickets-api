@@ -19,7 +19,6 @@ framework:
     trusted_hosts:   ~
     trusted_proxies: ~
     session:
-        # handler_id set to null will use default session handler from php.ini
         handler_id:  ~
     fragments:       ~
     http_method_override: true
@@ -28,6 +27,7 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
 # Assetic Configuration
 assetic:
@@ -59,6 +59,17 @@ doctrine:
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
+        mappings:
+            gedmo_loggable:
+                type: annotation
+                prefix: Gedmo\Loggable\Entity
+                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity"
+                alias: GedmoLoggable # this one is optional and will default to the name set for the mapping
+                is_bundle: false
+        filters:
+            softdeleteable:
+                class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                enabled: true
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -68,5 +79,68 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
+services:
+    gedmo.listener.softdeleteable:
+        class: Gedmo\SoftDeleteable\SoftDeleteableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]
+
 doctrine_migrations:
     dir_name: %kernel.root_dir%/../data/doctrine-migrations
+
+stof_doctrine_extensions:
+    default_locale: en_US
+    orm:
+        default:
+            timestampable: true
+            loggable: true
+
+nelmio_api_doc: ~
+
+sensio_framework_extra:
+    view:
+        annotations: false # Disable the default view annotations
+
+fos_rest:
+    routing_loader:
+        default_format: null
+    view:
+        default_engine: twig
+        force_redirects:
+            html: true
+        formats:
+            json: true
+            xml: true
+        templating_formats:
+            html: false
+        view_response_listener: 'force'
+        failed_validation: HTTP_BAD_REQUEST
+    exception:
+        codes: ~
+        messages: ~
+    body_listener:
+        decoders:
+            json: fos_rest.decoder.json
+            xml: fos_rest.decoder.xml
+    format_listener:
+        rules:
+            - priorities: [json, xml]
+            - fallback_format: json
+    param_fetcher_listener: true
+    service:
+        router: router
+        templating: templating
+        serializer: serializer
+        view_handler: fos_rest.view_handler.default
+
+esenio_security:
+    realm: REST Tickets API
+    secret: %secret%
+    jwt:
+        return_url: http://api.rest.tickets/secured # URI which will be advised as the next step after authentication
+        iss: https://api.rest.tickets
+        aud: https://api.rest.tickets
+#        token_lifetime: 60
+

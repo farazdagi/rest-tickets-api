@@ -1,0 +1,11 @@
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /docs
+
+EsenioDefaultBundle:
+    resource: "@EsenioDefaultBundle/Resources/config/routing.yml"
+    prefix:   /
+
+EsenioSecurityBundle:
+    resource: "@EsenioSecurityBundle/Resources/config/routing.yml"
+    prefix:   /

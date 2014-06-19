@@ -1,12 +1,30 @@
 security:
+    encoders:
+        Esenio\SecurityBundle\Entity\User:
+            algorithm: sha512
+            encode_as_base64: false
+            iterations: 1
+
+    role_hierarchy:
+        ROLE_USER: ~
+        ROLE_STAFF: ROLE_USER
+        ROLE_ADMIN: ~
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_STAFF, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
     providers:
         in_memory:
             memory: ~
-
+        token_auth:
+            id: esenio_security.token_authentication.user_provider
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-
-        default:
+        secured_area:
+            pattern: ^/secured
+            stateless: true
+            provider: token_auth # user provider
+            token_auth: true
+#                providers:
+#                    authenticator: some class
+#                    user: some other class
+        main:
             anonymous: ~
+            stateless:  true

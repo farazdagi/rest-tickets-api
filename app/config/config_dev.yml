@@ -32,5 +32,14 @@ monolog:
 assetic:
     use_controller: %use_assetic_controller%
 
+services:
+   twig.extension.text:
+       class: Twig_Extensions_Extension_Text
+       tags:
+           - { name: twig.extension }
+   twig.extension.debug:
+       class: Twig_Extensions_Extension_Debug
+       tags:
+           - { name: twig.extension }
 #swiftmailer:
 #    delivery_address: me@example.com
