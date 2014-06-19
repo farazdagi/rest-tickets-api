@@ -8,6 +8,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View as RestView;
 
 use Esenio\SecurityBundle\Model\UserManagerInterface;
+use Esenio\SecurityBundle\Security\TokenAuthentication\Token\TokenInterface;
 
 /**
  * API Entry Point
@@ -35,7 +36,14 @@ class DefaultController extends Controller
      */
     public function securedAction()
     {
-        $view = RestView::create(array('message' => 'Welcome, to secret zone!'), 200);
+        /** @var TokenInterface $token */
+        $token = $this->get('security.context')->getToken();
+
+        $data = array(
+            'message' => sprintf('Welcome, %s! This area is protected (or should be!)', $token->getUsername())
+        );
+
+        $view = RestView::create($data, 200);
         return $view;
     }
 }
