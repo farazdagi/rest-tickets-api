@@ -3,6 +3,7 @@
 namespace Esenio\SecurityBundle\Security\TokenAuthentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface as BaseTokenInterface;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 
 /**
@@ -81,16 +82,18 @@ class TokenEncoder implements TokenEncoderInterface, TokenDecoderInterface
      *
      * @param string $encoded Encoded token string
      *
-     * @return array|bool False if token cannot be decoded, decoded token payload otherwise.
+     * @throws BadCredentialsException
+     * @return array Decoded token payload is returned on success. Exceptions are thrown otherwise.
      */
     public function decodeToken($encoded)
     {
-        if ($this->isTokenValid($encoded)) {
+        try {
             $payload = \JWT::decode($encoded, $this->secretKey, true);
-            return get_object_vars($payload);
+        } catch (\UnexpectedValueException $e) {
+            throw new BadCredentialsException($e->getMessage());
         }
 
-        return false;
+        return get_object_vars($payload);
     }
 
     /**
