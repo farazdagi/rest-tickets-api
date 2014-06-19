@@ -123,16 +123,7 @@ class TokenIssuerTest extends TestCase
     public function testIssueTokenWithValidAuthorizationHeaderButInvalidPayload()
     {
         $this->setExpectedException(self::EXCEPTION_BAD_CREDENDIALS, 'Cannot decode token credentials.');
-        /** @var UserManagerInterface $userManager */
-        $userManager = $this->container->get('esenio_security.user_manager');
-        $users = $userManager->findUsers();
 
-        /** @var UserInterface $user */
-        $user = $users[0];
-
-        $payload = array(
-            'exp'       => time() + 3600
-        );
         $encodedToken = 'some-junk';
 
         $request = new Request();
@@ -298,7 +289,7 @@ class TokenIssuerTest extends TestCase
         $username = $faker->uuid;
 
         $this->setExpectedException(self::EXCEPTION_USERNAME_NOT_FOUND, sprintf(
-            'Username "%s" does not exist.', $username
+            "Username '%s' does not exist.", $username
         ));
 
         // setup request
@@ -460,7 +451,7 @@ class TokenIssuerTest extends TestCase
             $this->service->verifyToken($token);
             $this->fail('Token expired exception is expected');
         } catch (BadCredentialsException $e) {
-            $this->assertEquals('Token is expired.', $e->getMessage());
+            $this->assertEquals('Expired Token', $e->getMessage());
         }
     }
 }

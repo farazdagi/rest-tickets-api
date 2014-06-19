@@ -116,7 +116,8 @@ class TokenEncoderTest extends TestCase
     public function testDecodeTokenWithInvalidToken()
     {
         $faker = Faker\Factory::create();
-        $this->assertFalse($this->decoder->decodeToken($faker->uuid));
+        $this->setExpectedException('Symfony\Component\Security\Core\Exception\BadCredentialsException', 'Wrong number of segments');
+        $this->decoder->decodeToken($faker->uuid);
     }
 
     public function testSupportsTokenMethod()

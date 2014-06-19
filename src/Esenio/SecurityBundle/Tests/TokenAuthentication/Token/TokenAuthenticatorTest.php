@@ -134,14 +134,8 @@ class TokenAuthenticatorTest extends TestCase
             'Authorization' => sprintf('Bearer %s', $bearerToken)
         ));
 
-        // create token
-        $token = $this->service->createToken($request);
-        $this->assertTrue($token instanceof TokenInterface);
-        $this->assertFalse($token->getUser() instanceof UserInterface);  // no user attached just yeat
-        $this->assertFalse($token->isAuthenticated());
-        $this->assertEquals($user->getUsername(), $token->getUsername());
-
-        $this->setExpectedException(self::EXCEPTION_AUTHENTICATION, 'Token is expired');
+        $token = $this->factory->createToken($user, $bearerToken);
+        $this->setExpectedException(self::EXCEPTION_AUTHENTICATION, 'Expired Token');
 
         // authenticate token
         $token = $this->service->authenticateToken($token);
@@ -150,6 +144,32 @@ class TokenAuthenticatorTest extends TestCase
         $this->assertTrue($token->isAuthenticated());
         $this->assertEquals($user->getUsername(), $token->getUsername());
 
+    }
+
+    public function testTokenCreationWithExpiredToken()
+    {
+        $user = $this->getUser();
+
+        $payload = array(
+            'username'  => $user->getUsername(),
+            'exp'       => time() - 1
+        );
+
+        $bearerToken = $this->encoder->encodeToken($payload);
+
+        $request = new Request();
+        $request->headers->add(array(
+            'Authorization' => sprintf('Bearer %s', $bearerToken)
+        ));
+
+        $this->setExpectedException(self::EXCEPTION_AUTHENTICATION, 'Expired Token');
+
+        // create token
+        $token = $this->service->createToken($request);
+        $this->assertTrue($token instanceof TokenInterface);
+        $this->assertFalse($token->getUser() instanceof UserInterface);  // no user attached just yeat
+        $this->assertFalse($token->isAuthenticated());
+        $this->assertEquals($user->getUsername(), $token->getUsername());
     }
 
     public function testTokenAuthenticationWithInvalidToken()

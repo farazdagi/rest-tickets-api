@@ -64,7 +64,7 @@ class UserProvider implements UserProviderInterface
         $user = $this->userManager->findUserByUsername($username);
         if (!$user) {
             throw new UsernameNotFoundException(
-                sprintf('Username "%s" does not exist.', $username)
+                sprintf("Username '%s' does not exist.", $username)
             );
         }
 

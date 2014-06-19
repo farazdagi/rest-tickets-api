@@ -113,7 +113,7 @@ class UserProviderTest extends TestCase
         $username = $faker->userName;
 
         $this->setExpectedException('Symfony\Component\Security\Core\Exception\UsernameNotFoundException', sprintf(
-            'Username "%s" does not exist.', $username
+            "Username '%s' does not exist.", $username
         ));
 
         $this->service->loadUserByUsername($username);

@@ -274,7 +274,7 @@ class UserManipulatorTest extends TestCase
         $username = $faker->userName;
 
         $this->setExpectedException('\InvalidArgumentException', sprintf(
-            'User identified by "%s" username does not exist.', $username
+            "User identified by '%s' username does not exist.", $username
         ));
         $this->service->changePassword($username, 'top-secret');
     }

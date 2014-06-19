@@ -220,7 +220,7 @@ class UserManagerTest extends TestCase
         $user->setUsername($faker->uuid);
         $this->setExpectedException(
             '\Symfony\Component\Security\Core\Exception\UsernameNotFoundException',
-            sprintf('No user with name "%s" was found.', $user->getUsername())
+            sprintf("No user with name '%s' was found.", $user->getUsername())
         );
 
         $this->service->reloadUser($user);

@@ -201,7 +201,7 @@ class UserManager implements UserManagerInterface
     {
         $reloadedUser = $this->findUserByUsername($user->getUsername());
         if (!$reloadedUser) {
-            throw new UsernameNotFoundException(sprintf('No user with name "%s" was found.', $user->getUsername()));
+            throw new UsernameNotFoundException(sprintf("No user with name '%s' was found.", $user->getUsername()));
         }
 
         $this->em->refresh($reloadedUser);
