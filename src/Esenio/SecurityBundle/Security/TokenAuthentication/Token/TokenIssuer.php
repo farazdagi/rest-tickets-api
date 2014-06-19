@@ -2,14 +2,14 @@
 
 namespace Esenio\SecurityBundle\Security\TokenAuthentication\Token;
 
-use Esenio\SecurityBundle\Model\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 use Esenio\SecurityBundle\Security\TokenAuthentication\Provider\UserProviderInterface;
+use Esenio\SecurityBundle\Model\UserInterface;
 
 
 class TokenIssuer implements TokenIssuerInterface
@@ -175,10 +175,7 @@ class TokenIssuer implements TokenIssuerInterface
         }
 
         // decode
-        $payload = $this->decoder->decodeToken($token->getCredentials());
-        if (!$payload) {
-            throw new BadCredentialsException('Cannot decode token credentials.');
-        }
+        $payload = $this->decodeToken($token->getCredentials());
 
         // make sure that "username" in token is equals to that of supplied user
         if (!isset($payload['username']) || empty($payload['username'])) {
@@ -191,9 +188,6 @@ class TokenIssuer implements TokenIssuerInterface
         // make sure that token is not expired
         if (!isset($payload['exp']) || empty($payload['exp'])) {
             throw new BadCredentialsException('Cannot extract expiration time from token payload.');
-        }
-        if ($payload['exp'] < time()) {
-            throw new BadCredentialsException('Token is expired.');
         }
     }
 
@@ -216,10 +210,8 @@ class TokenIssuer implements TokenIssuerInterface
         $credentials = $matches[1];
 
         // decode
-        $payload = $this->decoder->decodeToken($credentials);
-        if (!$payload) {
-            throw new BadCredentialsException('Cannot decode token credentials.');
-        }
+        $payload = $this->decodeToken($credentials);
+
         // make sure that 'username' is encoded
         if (!isset($payload['username']) || empty($payload['username'])) {
             throw new BadCredentialsException('Cannot extract username from token payload.');
@@ -259,5 +251,28 @@ class TokenIssuer implements TokenIssuerInterface
         }
 
         throw new BadCredentialsException('Authentication failed..');
+    }
+
+
+    /**
+     * Decoded encoded token string into original token payloadj.
+     *
+     * @param string $encoded Encoded token string
+     * @return array Decoded payload
+     * @throws BadCredentialsException
+     */
+    private function decodeToken($encoded)
+    {
+        try {
+            $payload = $this->decoder->decodeToken($encoded);
+        } catch(\Exception $e) { // intercept all
+            $message = 'Cannot decode token credentials.';
+            if ($e->getMessage() == 'Expired Token') { // ignore error (our verify method takes care of this exception)
+                $message = $e->getMessage();
+            }
+            throw new BadCredentialsException($message);
+        }
+
+        return $payload;
     }
 }
