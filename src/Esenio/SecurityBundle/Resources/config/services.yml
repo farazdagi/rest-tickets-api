@@ -1,0 +1,75 @@
+parameters:
+    esenio_security.token_authentication.user_provider.class: Esenio\SecurityBundle\Security\TokenAuthentication\Provider\UserProvider
+    esenio_security.token_authentication.token_authenticator.class: Esenio\SecurityBundle\Security\TokenAuthentication\Token\TokenAuthenticator
+    esenio_security.token_authentication.authentication_provider.class: Esenio\SecurityBundle\Security\TokenAuthentication\Provider\AuthenticationProvider
+    esenio_security.http.firewall.token_authentication_listener.class: Esenio\SecurityBundle\Security\Http\Firewall\TokenAuthenticationListener
+
+    esenio_security.token_factory.class: Esenio\SecurityBundle\Security\TokenAuthentication\Token\TokenFactory
+    esenio_security.token_authentication.token_encoder.class: Esenio\SecurityBundle\Security\TokenAuthentication\Token\TokenEncoder
+
+    esenio_security.token_issuer.class: Esenio\SecurityBundle\Security\TokenAuthentication\Token\TokenIssuer
+    esenio_security.user_repository.class: Esenio\SecurityBundle\Entity\User
+    esenio_security.user_manager.class: Esenio\SecurityBundle\Model\UserManager
+    esenio_security.user_manipulator.class: Esenio\SecurityBundle\Util\UserManipulator
+
+services:
+    esenio_security.token_authentication.user_provider:
+        class: %esenio_security.token_authentication.user_provider.class%
+        arguments:
+            - @esenio_security.user_manager
+
+    esenio_security.token_authentication.token_authenticator:
+        class: %esenio_security.token_authentication.token_authenticator.class%
+        arguments:
+            - @esenio_security.token_issuer
+
+    esenio_security.token_authentication.authentication_provider:
+        class: %esenio_security.token_authentication.authentication_provider.class%
+        arguments:
+            - @esenio_security.token_authentication.token_authenticator
+
+    esenio_security.http.firewall.token_authentication_listener:
+        class: %esenio_security.http.firewall.token_authentication_listener.class%
+        arguments:
+            - @security.context
+            - @security.authentication.manager
+            - @esenio_security.token_authentication.token_authenticator
+            - @logger
+
+    esenio_security.token_authentication.token_encoder:
+        class: %esenio_security.token_authentication.token_encoder.class%
+        arguments: ['', ''] # private key and algorithm will be setup in SetupTokenEncoderPass (see DependencyInjection)
+
+    esenio_security.token_factory:
+        class: %esenio_security.token_factory.class%
+
+    esenio_security.token_issuer:
+        class: %esenio_security.token_issuer.class%
+        arguments:
+            - @esenio_security.token_factory
+            - @esenio_security.token_authentication.user_provider
+            - @esenio_security.token_authentication.token_encoder
+            - @esenio_security.token_authentication.token_encoder # encoder is able to decode as well
+            - @security.encoder_factory
+
+    esenio_security.user_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - %esenio_security.user_repository.class%
+
+    esenio_security.user_manager:
+        class: %esenio_security.user_manager.class%
+        arguments:
+            - @event_dispatcher
+            - @doctrine.orm.entity_manager
+            - @esenio_security.user_repository
+            - @security.encoder_factory
+
+    esenio_security.user_manipulator:
+        class: %esenio_security.user_manipulator.class%
+        arguments:
+            - @esenio_security.user_manager
+
+
