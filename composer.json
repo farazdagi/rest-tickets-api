@@ -26,8 +26,11 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "kriswallsmith/buzz": "v0.9",
         "jms/serializer-bundle": "dev-master",
+        "jms/di-extra-bundle": "dev-master",
         "friendsofsymfony/rest-bundle": "1.4.*",
-        "nelmio/api-doc-bundle": "2.5.*"
+        "nelmio/api-doc-bundle": "2.5.*",
+        "firebase/php-jwt": "dev-master",
+        "fzaninotto/faker": "v1.3.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

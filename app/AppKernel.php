@@ -20,7 +20,13 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
+            new JMS\AopBundle\JMSAopBundle(),
             new FOS\RestBundle\FOSRestBundle(),
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
+            new Esenio\DefaultBundle\EsenioDefaultBundle(),
+            new Esenio\SecurityBundle\EsenioSecurityBundle(),
+            new Esenio\TestingBundle\EsenioTestingBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
