@@ -450,7 +450,7 @@ class User implements UserInterface
     }
 
     /**
-     * @alias isEnabled
+     * @see isEnabled
      * @return boolean
      */
     public function getEnabled()
