@@ -1,0 +1,7 @@
+parameters:
+#    esenio_default.example.class: Esenio\DefaultBundle\Example
+
+services:
+#    esenio_default.example:
+#        class: %esenio_default.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

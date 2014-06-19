@@ -1,0 +1,4 @@
+EsenioDefaultBundle_Default:
+    resource:   "@EsenioDefaultBundle/Controller/DefaultController.php"
+    type:       annotation
+
