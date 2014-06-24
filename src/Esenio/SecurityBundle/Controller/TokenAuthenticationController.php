@@ -31,10 +31,15 @@ class TokenAuthenticationController extends Controller
      * Check user credentials, issue token on success
      *
      * @Route("/authenticate")
-     * @Method("POST")
+     * @Method({"POST", "OPTIONS"})
      */
     public function authenticateAction(Request $request)
     {
+        // no need to proceed if client sends pre-flight request
+        if ($request->isMethod('OPTIONS')) {
+            return RestView::create(null, 204);
+        }
+
         // obtain configuration options
         $params = $this->container->getParameter('esenio_security.jwt');
 
@@ -42,6 +47,8 @@ class TokenAuthenticationController extends Controller
             $token = $this->tokenIssuer->issueToken($request);
             $token = $this->tokenIssuer->signToken($token); // after this $token is valid authentication token!
         } catch (BadCredentialsException $e) {
+            return $this->issueAuthenticationDemand($e->getMessage());
+        } catch (\Exception $e) {
             return $this->issueAuthenticationDemand($e->getMessage());
         }
 

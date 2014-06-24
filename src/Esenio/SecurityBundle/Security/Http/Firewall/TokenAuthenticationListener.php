@@ -3,6 +3,7 @@
 namespace Esenio\SecurityBundle\Security\Http\Firewall;
 
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
@@ -61,7 +62,22 @@ class TokenAuthenticationListener implements ListenerInterface
      */
     public function handle(GetResponseEvent $event)
     {
+        /** @var Request $request */
         $request = $event->getRequest();
+
+        /* allow pre-flight requests */
+        if ($request->isMethod('OPTIONS')) {
+            $this->securityContext->setToken(new AnonymousToken('anon', 'anon.', array()));
+
+            if (null !== $this->logger) {
+                $this->logger->info('Populated SecurityContext with an anonymous Token');
+            }
+
+            $response = new Response();
+            $response->setStatusCode(204);
+            $event->setResponse($response);
+            return;
+        }
 
         if (null !== $this->logger) {
             $this->logger->info(sprintf('Attempting token authentication'));
