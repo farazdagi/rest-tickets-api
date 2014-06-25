@@ -23,12 +23,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        /** @var UserManagerInterface $userManager */
-        $userManager = $this->container->get('esenio_security.user_manager');
-        $data = $userManager->findUsers();
-
-        $view = RestView::create($data, 200);
-        return $view;
+        return $this->view(array('message' => 'Everything is always kuul in Unnkulian Underworld!'));
     }
 
     /**
