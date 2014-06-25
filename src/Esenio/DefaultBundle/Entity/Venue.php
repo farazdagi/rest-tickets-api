@@ -4,6 +4,8 @@ namespace Esenio\DefaultBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Venue
@@ -11,6 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="venues")
  * @ORM\Entity(repositoryClass="Esenio\DefaultBundle\Entity\VenueRepository")
  * @Gedmo\SoftDeleteable(fieldName="deleted")
+ * @ExclusionPolicy("all")
  */
 class Venue
 {
@@ -20,11 +23,13 @@ class Venue
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string")
+     * @Expose
      */
     private  $name;
 

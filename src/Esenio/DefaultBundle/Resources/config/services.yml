@@ -1,7 +1,11 @@
 parameters:
-#    esenio_default.example.class: Esenio\DefaultBundle\Example
+    esenio_default.event_repository.class: Esenio\DefaultBundle\Entity\Event
 
 services:
-#    esenio_default.example:
-#        class: %esenio_default.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    esenio_default.event_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - %esenio_default.event_repository.class%
+

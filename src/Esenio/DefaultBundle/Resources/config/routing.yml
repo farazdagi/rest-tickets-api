@@ -1,4 +1,8 @@
 EsenioDefaultBundle_Default:
     resource:   "@EsenioDefaultBundle/Controller/DefaultController.php"
     type:       annotation
+EsenioDefaultBundle_Event:
+    resource:   "@EsenioDefaultBundle/Controller/EventController.php"
+    type:       rest
+    prefix: /secured
 

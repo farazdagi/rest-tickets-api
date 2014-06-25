@@ -12,4 +12,13 @@ use Doctrine\ORM\EntityRepository;
  */
 class EventRepository extends EntityRepository
 {
+    public function getEventsQueryBuilder()
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb
+            ->select('e')
+            ->from('EsenioDefaultBundle:Event', 'e')
+        ;
+        return $qb;
+    }
 }

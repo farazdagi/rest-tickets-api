@@ -4,6 +4,8 @@ namespace Esenio\DefaultBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Talk
@@ -11,6 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="talks")
  * @ORM\Entity(repositoryClass="Esenio\DefaultBundle\Entity\TalkRepository")
  * @Gedmo\SoftDeleteable(fieldName="deleted")
+ * @ExclusionPolicy("all")
  */
 class Talk
 {
@@ -20,26 +23,31 @@ class Talk
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Event")
+     * @Expose
      */
     private $event;
 
     /**
      * @ORM\ManyToOne(targetEntity="Esenio\SecurityBundle\Entity\User")
+     * @Expose
      */
     private $speaker;
 
     /**
      * @ORM\Column(type="string")
+     * @Expose
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Expose
      */
     private $abstract;
 

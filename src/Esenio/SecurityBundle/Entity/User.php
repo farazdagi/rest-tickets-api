@@ -9,6 +9,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 use Esenio\SecurityBundle\Model\UserInterface;
 
@@ -18,6 +20,7 @@ use Esenio\SecurityBundle\Model\UserInterface;
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="Esenio\SecurityBundle\Entity\UserRepository")
  * @Gedmo\SoftDeleteable(fieldName="deleted")
+ * @ExclusionPolicy("all")
  * @package Esenio\SecurityBundle\Entity
  */
 class User implements UserInterface
@@ -33,6 +36,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", unique=true)
+     * @Expose
      */
     protected  $username;
 
@@ -58,11 +62,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=120, nullable=true)
+     * @Expose
      */
     protected $fname;
 
     /**
      * @ORM\Column(type="string", length=120, nullable=true)
+     * @Expose
      */
     protected $lname;
 

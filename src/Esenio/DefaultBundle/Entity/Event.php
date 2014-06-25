@@ -4,12 +4,15 @@ namespace Esenio\DefaultBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Event
  *
  * @ORM\Table(name="events")
  * @ORM\Entity(repositoryClass="Esenio\DefaultBundle\Entity\EventRepository")
+ * @ExclusionPolicy("all")
  * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
 class Event
@@ -20,26 +23,31 @@ class Event
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Venue")
+     * @Expose
      */
     private $venue;
 
     /**
      * @ORM\Column(type="string")
+     * @Expose
      */
     private $name;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Expose
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Expose
      */
     private $endDate;
 
