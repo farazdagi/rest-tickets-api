@@ -30,7 +30,8 @@
         "friendsofsymfony/rest-bundle": "1.4.*",
         "nelmio/api-doc-bundle": "2.5.*",
         "firebase/php-jwt": "dev-master",
-        "fzaninotto/faker": "v1.3.0"
+        "fzaninotto/faker": "v1.3.0",
+        "white-october/pagerfanta-bundle": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
