@@ -50,8 +50,7 @@ class LoadTalkData extends AbstractFixture implements FixtureInterface, OrderedF
         $types = array('Conference', 'Meetup', 'Hackaton', 'Orgy', 'Sleepless Night', 'Event', 'Barcamp', 'Unconf', 'Conf');
         $periods = array('', 'Annual ', 'Monthly ', 'Weekly ', 'Ultimate ', 'The only ', 'Poor Man\'s ');
 
-        $totalTalksCnt = rand(5, 20);
-        for ($i = 0; $i < $totalTalksCnt; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             $talk = new Talk();
             $talk->setTitle($faker->text(50));
             $talk->setAbstract($faker->text(300));
